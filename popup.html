@@ -8,7 +8,7 @@
 <body>
   <header class="monument" aria-hidden="true">
     <!-- The "atom model": orbits and planets above the column -->
-    <svg class="atom" viewBox="0 0 200 70">
+    <svg class="atom" id="atom" viewBox="0 0 200 70">
       <line x1="100" y1="70" x2="100" y2="42" class="mast"/>
       <g class="orbits">
         <ellipse cx="100" cy="34" rx="78" ry="12" class="orbit"/>
@@ -17,13 +17,13 @@
       </g>
       <circle cx="100" cy="34" r="6" class="sun"/>
       <g class="planet p1">
-        <circle r="3.2"><animateMotion dur="14s" repeatCount="indefinite" path="M22,34 a78,12 0 1,0 156,0 a78,12 0 1,0 -156,0"/></circle>
+        <circle r="3.2"><animateMotion dur="60s" repeatCount="indefinite" path="M22,34 a78,12 0 1,0 156,0 a78,12 0 1,0 -156,0"/></circle>
       </g>
       <g class="planet p2" transform="rotate(-14 100 34)">
-        <circle r="2.6"><animateMotion dur="9s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear" path="M42,34 a58,20 0 1,0 116,0 a58,20 0 1,0 -116,0"/></circle>
+        <circle r="2.6"><animateMotion dur="60s" repeatCount="indefinite" path="M42,34 a58,20 0 1,0 116,0 a58,20 0 1,0 -116,0"/></circle>
       </g>
       <g class="planet p3" transform="rotate(22 100 34)">
-        <circle r="2.2"><animateMotion dur="6s" repeatCount="indefinite" path="M60,34 a40,26 0 1,0 80,0 a40,26 0 1,0 -80,0"/></circle>
+        <circle r="2.2"><animateMotion dur="60s" repeatCount="indefinite" path="M60,34 a40,26 0 1,0 80,0 a40,26 0 1,0 -80,0"/></circle>
       </g>
     </svg>
   </header>

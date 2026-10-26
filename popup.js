@@ -158,6 +158,7 @@ const save = () => store.set({ cities: state.cities, hour12: state.hour12, clock
 // ---------- The column ----------
 
 const faces = [];
+const ringSegs = [];
 
 function buildColumn() {
   const cyl = $("cylinder");
@@ -166,9 +167,41 @@ function buildColumn() {
     const face = document.createElement("div");
     face.className = "face";
     face.style.transform = `rotateY(${i * FACE_DEG}deg) translateZ(${RADIUS}px)`;
-    face.innerHTML = `<div class="hour"></div><div class="body"></div><div class="zone">${fmtOffset(k * 60)}</div>`;
+    face.innerHTML = `<div class="track"></div><div class="body"></div><div class="zone">${fmtOffset(k * 60)}</div>`;
     cyl.appendChild(face);
-    faces.push({ k, el: face, hour: face.firstChild, body: face.children[1] });
+    faces.push({ k, el: face, body: face.children[1] });
+  }
+
+  // The hour ring is separate from the fixed faces, as on the real clock:
+  // it carries the numbers 0–23 and turns once a day around the column.
+  // It runs just outside the column's corners so it never cuts into them
+  // when a number sits between two faces.
+  const ringRadius = RADIUS / Math.cos((FACE_DEG / 2) * Math.PI / 180) + 2;
+  const faceW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--face-w")) || 46;
+  const segW = faceW * ringRadius / RADIUS;
+  const ring = document.createElement("div");
+  ring.className = "ring";
+  ring.id = "ring";
+  ring.style.width = `${segW}px`;
+  ring.style.left = `${(faceW - segW) / 2}px`;
+  for (let h = 0; h < 24; h++) {
+    const seg = document.createElement("div");
+    seg.className = isNight(h) ? "seg night" : "seg";
+    seg.style.transform = `rotateY(${(h + 11) * FACE_DEG}deg) translateZ(${ringRadius}px)`;
+    ring.appendChild(seg);
+    ringSegs.push({ h, el: seg });
+  }
+  cyl.appendChild(ring);
+}
+
+// Hour h sits over the face where it is exactly h:00 right now, so the ring
+// creeps westward 15° an hour and each number glides from face to face.
+function renderRing(now) {
+  const t = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
+  $("ring").style.transform = `rotateY(${-t * FACE_DEG}deg)`;
+  for (const s of ringSegs) {
+    const label = state.hour12 ? String(s.h % 12 || 12) : String(s.h).padStart(2, "0");
+    if (s.el.textContent !== label) s.el.textContent = label;
   }
 }
 
@@ -183,10 +216,6 @@ function renderColumn(now) {
 
   const front = frontFace();
   for (const f of faces) {
-    const hour = (utcHour + f.k + 24) % 24;
-    const label = state.hour12 ? String(hour % 12 || 12) : String(hour).padStart(2, "0");
-    if (f.hour.textContent !== label) f.hour.textContent = label;
-
     const mine = byFace.get(f.k) || [];
     const names = mine.length ? mine.slice(0, 3) : [FACE_LABELS[f.k]];
     const html = names.map((n) => `<span class="name${mine.length ? "" : " ref"}">${escapeHtml(n)}</span>`).join("");
@@ -194,9 +223,9 @@ function renderColumn(now) {
     f.el.title = mine.length ? mine.join(", ") : `UTC${fmtOffset(f.k * 60)}`;
 
     f.el.classList.toggle("mine", mine.length > 0);
-    f.el.classList.toggle("night", isNight(hour));
     f.el.classList.toggle("front", f.k === front);
   }
+  renderRing(now);
 }
 
 function frontFace() {
@@ -562,6 +591,9 @@ async function init() {
   applyRotation();
   cyl.getBoundingClientRect();
   cyl.style.transition = "";
+
+  // The atom model turns once a minute; start it where the real one would be.
+  $("atom").setCurrentTime((Date.now() % 60000) / 1000);
 
   renderList();
   setInterval(tick, 1000);

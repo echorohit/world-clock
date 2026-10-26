@@ -27,8 +27,10 @@ Works in any Chromium browser that supports Manifest V3 (Chrome, Edge, Brave, Ar
 ## Use
 
 - **Add a city:** type in the search box (≈130 curated cities plus every IANA time zone), then pick with ↑/↓ + Enter or click.
-- **The column:** faces holding your cities glow orange; faint names are the column's own reference plaques.
+- **The column:** faces holding your cities are marked orange; faint names are the column's own reference plaques.
   Drag or scroll to turn it; click a city in the list to turn its face to the front.
+- **Moves like the real one:** the hour ring turns around the fixed column once a day (15° an hour), so each number
+  glides from face to face — at half past, it sits halfway between two faces. The atom model on top turns once a minute.
 - **List:** local time, day/night, Today/Tomorrow/Yesterday, UTC offset and the difference from your time.
   Drag rows to reorder, × to remove.
 - **Swiss clocks:** two SBB-style railway clocks; pick each one's city from the dropdown under it (any city in your list).
