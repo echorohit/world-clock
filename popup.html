@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>World Clock</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="monument" aria-hidden="true">
+    <!-- The "atom model": orbits and planets above the column -->
+    <svg class="atom" viewBox="0 0 200 70">
+      <line x1="100" y1="70" x2="100" y2="42" class="mast"/>
+      <g class="orbits">
+        <ellipse cx="100" cy="34" rx="78" ry="12" class="orbit"/>
+        <ellipse cx="100" cy="34" rx="58" ry="20" class="orbit" transform="rotate(-14 100 34)"/>
+        <ellipse cx="100" cy="34" rx="40" ry="26" class="orbit" transform="rotate(22 100 34)"/>
+      </g>
+      <circle cx="100" cy="34" r="6" class="sun"/>
+      <g class="planet p1">
+        <circle r="3.2"><animateMotion dur="14s" repeatCount="indefinite" path="M22,34 a78,12 0 1,0 156,0 a78,12 0 1,0 -156,0"/></circle>
+      </g>
+      <g class="planet p2" transform="rotate(-14 100 34)">
+        <circle r="2.6"><animateMotion dur="9s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear" path="M42,34 a58,20 0 1,0 116,0 a58,20 0 1,0 -116,0"/></circle>
+      </g>
+      <g class="planet p3" transform="rotate(22 100 34)">
+        <circle r="2.2"><animateMotion dur="6s" repeatCount="indefinite" path="M60,34 a40,26 0 1,0 80,0 a40,26 0 1,0 -80,0"/></circle>
+      </g>
+    </svg>
+  </header>
+
+  <section class="rotunda-wrap">
+    <div class="rotunda" id="rotunda" title="Drag or scroll to turn the column">
+      <div class="cylinder" id="cylinder"></div>
+    </div>
+    <div class="plinth">
+      <span id="utcReadout">UTC --:--</span>
+      <button id="formatToggle" class="chip" type="button" title="Toggle 12/24-hour">24h</button>
+    </div>
+  </section>
+
+  <section class="swiss-pair">
+    <figure class="swiss">
+      <svg class="dial" viewBox="-100 -100 200 200" role="img" aria-label="Swiss railway clock"></svg>
+      <figcaption>
+        <select class="pick" aria-label="City for this clock"></select>
+        <div class="info"></div>
+      </figcaption>
+    </figure>
+    <figure class="swiss">
+      <svg class="dial" viewBox="-100 -100 200 200" role="img" aria-label="Swiss railway clock"></svg>
+      <figcaption>
+        <select class="pick" aria-label="City for this clock"></select>
+        <div class="info"></div>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="add">
+    <label for="search" class="visually-hidden">Add a city</label>
+    <input id="search" type="text" placeholder="Add a city — e.g. Tokyo, Lagos, Lima" autocomplete="off" spellcheck="false">
+    <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+  </section>
+
+  <ul id="cityList" class="city-list"></ul>
+  <p id="emptyHint" class="empty" hidden>No cities yet. Add one above.</p>
+
+  <script src="cities.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

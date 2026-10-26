@@ -1,0 +1,345 @@
+:root {
+  --night: #0f1820;
+  --enamel: #16232e;
+  --panel: #1d2c38;
+  --line: #2c3e4c;
+  --alu-hi: #e4e8eb;
+  --alu-lo: #9aa3ab;
+  --ink: #e9eef2;
+  --muted: #8796a3;
+  --signal: #f0712f;   /* the orange of the hour ring */
+  --mosaic: #2bb3a3;   /* the teal of the compass-rose mosaic */
+  --face-w: 46px;
+  --radius: 172px;     /* ≈ face-w / (2·tan 7.5°) */
+  --font: "Bahnschrift", "DIN Alternate", "DIN Condensed", "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  width: 400px;
+  min-height: 480px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #1f3242 0%, transparent 70%),
+    var(--night);
+  color: var(--ink);
+  font: 13px/1.3 var(--font);
+  padding-bottom: 10px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+}
+
+/* ---------- Atom sculpture ---------- */
+
+.monument { display: flex; justify-content: center; padding-top: 8px; }
+.atom { width: 200px; height: 70px; overflow: visible; }
+.atom .mast { stroke: var(--alu-lo); stroke-width: 2; }
+.atom .orbit { fill: none; stroke: var(--alu-hi); stroke-width: 1.1; opacity: .75; }
+.atom .sun { fill: var(--alu-hi); }
+.atom .planet circle { fill: var(--signal); }
+.atom .p2 circle { fill: var(--mosaic); }
+.atom .p3 circle { fill: var(--alu-hi); }
+
+/* ---------- The 24-sided column ---------- */
+
+.rotunda-wrap { margin-top: -4px; }
+
+.rotunda {
+  height: 168px;
+  perspective: 900px;
+  perspective-origin: 50% 30%;
+  display: flex;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  overflow: hidden;
+  /* fade the sides so it reads as a drum */
+  mask-image: linear-gradient(90deg, transparent 0, #000 22%, #000 78%, transparent 100%);
+}
+.rotunda.dragging { cursor: grabbing; }
+
+.cylinder {
+  position: relative;
+  width: var(--face-w);
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+.rotunda.dragging .cylinder { transition: none; }
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(0, 0, 0, .35);
+}
+
+/* Upper ring: the hour numbers */
+.face .hour {
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #2a3a47, #1a2732);
+  color: var(--alu-hi);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  border-bottom: 3px solid #0b1218;
+  font-variant-numeric: tabular-nums;
+}
+.face.night .hour { color: #7f93a6; }
+
+/* Lower body: brushed-aluminium city plaques */
+.face .body {
+  flex: 1;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 1px;
+  padding: 6px 2px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, var(--alu-hi), var(--alu-lo));
+  color: #1b2630;
+  overflow: hidden;
+}
+.face .name {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+}
+.face .name.ref { opacity: .38; font-weight: 500; }
+.face .zone {
+  height: 16px;
+  font-size: 9px;
+  display: grid;
+  place-items: center;
+  background: #0b1218;
+  color: var(--muted);
+  letter-spacing: .4px;
+}
+
+.face.mine .hour { background: linear-gradient(180deg, #ff8a4c, var(--signal)); color: #1a0f08; }
+.face.mine.night .hour { background: linear-gradient(180deg, #b45a2c, #8b4019); color: #ffe3d2; }
+.face.front .zone { color: var(--mosaic); }
+
+.plinth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 16px 0;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .5px;
+}
+
+.chip {
+  font: inherit;
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--mosaic); }
+
+/* ---------- Swiss railway clocks ---------- */
+
+.swiss-pair {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin: 12px 16px 4px;
+}
+.swiss { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.swiss .dial { width: 150px; height: 150px; display: block; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .45)); }
+.swiss .bezel { fill: #5d666e; stroke: #c9ced3; stroke-width: 1.5; }
+.swiss .face-plate { fill: #fbfbf8; }
+.swiss.night .face-plate { fill: #e6e6e0; }
+.swiss .mark, .swiss .hand { fill: #141414; }
+.swiss .second { fill: #d4001a; }
+.swiss figcaption { display: flex; flex-direction: column; align-items: center; gap: 3px; max-width: 160px; }
+.swiss .pick {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 10px;
+  max-width: 100%;
+  cursor: pointer;
+}
+.swiss .pick:hover, .swiss .pick:focus { border-color: var(--mosaic); outline: none; }
+.swiss .info { color: var(--muted); font-size: 11px; white-space: nowrap; }
+
+/* ---------- Add city ---------- */
+
+.add { position: relative; margin: 6px 16px 10px; }
+
+#search {
+  width: 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--enamel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  outline: none;
+}
+#search::placeholder { color: var(--muted); }
+#search:focus { border-color: var(--mosaic); box-shadow: 0 0 0 3px rgba(43, 179, 163, .18); }
+
+.suggestions {
+  position: absolute;
+  z-index: 10;
+  left: 0; right: 0; top: calc(100% + 4px);
+  margin: 0; padding: 4px;
+  list-style: none;
+  background: var(--enamel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.suggestions li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.suggestions li .meta { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.suggestions li.active, .suggestions li:hover { background: var(--panel); }
+.suggestions li.none { color: var(--muted); cursor: default; }
+
+/* ---------- City list ---------- */
+
+.city-list { list-style: none; margin: 0 16px; padding: 0; display: grid; gap: 6px; }
+
+.city {
+  display: grid;
+  grid-template-columns: 1fr auto 22px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px 9px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--mosaic);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.city.night { border-left-color: #4a6378; }
+.city.local { border-left-color: var(--signal); }
+.city:hover { border-color: #3d5466; }
+.city.dragging { opacity: .4; }
+
+.city .where { min-width: 0; }
+.city .name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.city .sub { color: var(--muted); font-size: 11px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.city .time { text-align: right; font-variant-numeric: tabular-nums; }
+.city .clock { font-size: 22px; font-weight: 600; letter-spacing: .5px; }
+.city .clock .ampm { font-size: 11px; margin-left: 2px; color: var(--muted); }
+.city .day { color: var(--muted); font-size: 11px; }
+
+.remove {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  font-size: 16px; line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.remove:hover { color: var(--ink); background: rgba(255, 255, 255, .08); }
+
+.empty { text-align: center; color: var(--muted); margin: 18px 0; }
+
+/* ---------- New-tab page: same clock, monument scale ---------- */
+
+html.tab {
+  --face-w: 76px;
+  --radius: 289px;     /* ≈ 76 / (2·tan 7.5°) */
+}
+html.tab body {
+  width: auto;
+  min-height: 100vh;
+  padding: 3vh 24px 40px;
+  background:
+    radial-gradient(70% 45% at 50% 0%, #1f3242 0%, transparent 70%),
+    var(--night);
+}
+/* Swiss clocks flank the column: clock | Weltzeituhr | clock */
+html.tab body {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 640px) 1fr;
+  grid-template-areas:
+    "left  atom  right"
+    "left  drum  right"
+    ".     add   ."
+    "list  list  list"
+    "empty empty empty";
+  column-gap: 40px;
+  align-content: start;
+}
+html.tab .monument     { grid-area: atom; }
+html.tab .rotunda-wrap { grid-area: drum; }
+html.tab .swiss-pair   { display: contents; }
+html.tab .swiss:first-child { grid-area: left;  justify-self: end;   align-self: center; }
+html.tab .swiss:last-child  { grid-area: right; justify-self: start; align-self: center; }
+html.tab .add          { grid-area: add; width: 100%; justify-self: center; }
+html.tab .city-list    { grid-area: list; width: 100%; max-width: 960px; justify-self: center; }
+html.tab .empty        { grid-area: empty; }
+
+/* Too narrow for three columns: stack the clocks under the column again */
+@media (max-width: 1100px) {
+  html.tab body {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "atom atom" "drum drum" "left right" "add add" "list list" "empty empty";
+  }
+  html.tab .swiss { margin-top: 24px; }
+}
+html.tab .atom { width: 360px; height: 126px; }
+html.tab .rotunda { height: 280px; perspective: 1500px; }
+html.tab .face .hour { height: 58px; font-size: 32px; }
+html.tab .face .name { font-size: 15px; letter-spacing: 1px; }
+html.tab .face .zone { height: 22px; font-size: 12px; }
+html.tab .plinth { font-size: 16px; margin-top: 14px; padding: 10px 0; }
+html.tab .chip { font-size: 13px; padding: 3px 12px; }
+html.tab .swiss .dial { width: 260px; height: 260px; }
+html.tab .swiss figcaption { max-width: 260px; gap: 5px; }
+html.tab .swiss .pick { font-size: 15px; padding: 5px 14px; }
+html.tab .swiss .info { font-size: 13px; }
+html.tab .add { max-width: 520px; margin-top: 18px; margin-bottom: 22px; }
+html.tab #search { font-size: 15px; padding: 12px 16px; }
+html.tab .city-list { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+html.tab .city { padding: 14px 12px 14px 16px; }
+html.tab .city .name { font-size: 18px; }
+html.tab .city .clock { font-size: 30px; }
