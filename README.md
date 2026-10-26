@@ -1,14 +1,28 @@
 # Weltzeituhr — World Clock (Chrome extension)
 
 A world clock modeled on the Weltzeituhr at Alexanderplatz, Berlin: a 24-sided column whose
-hour ring shows the current hour in every time zone, topped by the atom-model sculpture.
+hour ring shows the current hour in every time zone, topped by the atom-model sculpture —
+flanked by two Swiss railway clocks for the cities you care about most.
 
-## Install (unpacked)
+**New tab page**
 
-1. Open `chrome://extensions`
-2. Turn on **Developer mode** (top right)
-3. Click **Load unpacked** and select this folder
-4. Pin the extension and click its icon
+![New tab: Swiss clocks either side of the Weltzeituhr column, with your city list below](docs/newtab.png)
+
+**Toolbar popup**
+
+<img src="docs/popup.png" alt="Popup: the column, two Swiss clocks and the city list" width="400">
+
+## Download & install
+
+1. **[Download the ZIP](https://github.com/echorohit/world-clock/archive/refs/heads/main.zip)** and unzip it
+   (or `git clone https://github.com/echorohit/world-clock.git`).
+2. Open `chrome://extensions` in Chrome.
+3. Turn on **Developer mode** (top right).
+4. Click **Load unpacked** and select the unzipped `world-clock` folder (the one containing `manifest.json`).
+5. Pin the extension from the puzzle-piece menu and click its icon.
+6. Open a new tab — Chrome asks once whether to keep the new tab page; choose **Keep it**.
+
+Works in any Chromium browser that supports Manifest V3 (Chrome, Edge, Brave, Arc…).
 
 ## Use
 
@@ -20,7 +34,7 @@ hour ring shows the current hour in every time zone, topped by the atom-model sc
 - **Swiss clocks:** two SBB-style railway clocks; pick each one's city from the dropdown under it (any city in your list).
   The red second hand sweeps in 58.5 s, rests at 12, then the minute hand jumps — like the real thing.
 - **12h / 24h:** toggle next to the UTC readout.
-- **New tab:** every new tab shows the clock at full size. Chrome asks once whether to keep the change; choose **Keep it**.
+- **New tab:** every new tab shows the clock at full size, with the Swiss clocks either side of the column.
   To go back to Chrome's default new tab, remove the `chrome_url_overrides` block from `manifest.json` and reload the extension.
 
 Cities and settings sync through `chrome.storage.sync`.
